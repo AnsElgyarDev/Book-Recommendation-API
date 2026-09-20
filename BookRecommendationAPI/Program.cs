@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -21,6 +22,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
+builder.Services.AddAuthorization();
 var encryptionSettings = new
 {
     _key = builder.Configuration["EncryptionSettings:Key"]
@@ -28,10 +30,12 @@ var encryptionSettings = new
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
+// app.UseExceptionHandler();
+app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("/", () => Results.Redirect("/scalar/v1"))
    .ExcludeFromDescription();
@@ -39,12 +43,7 @@ app.MapGet("/", () => Results.Redirect("/scalar/v1"))
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(); 
-
+    app.MapScalarApiReference();
 }
-
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseHttpsRedirection();
 
 app.Run();
