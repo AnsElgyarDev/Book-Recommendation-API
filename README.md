@@ -2,7 +2,7 @@
 
 A .NET Web API project integrated with the Google Books API to manage and fetch book data, featuring automated search caching and a smart recommendation hub.
 
-##  Getting Started
+## Getting Started
 
 To clone and run this repository locally, use the following commands:
 
