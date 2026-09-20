@@ -1,6 +1,50 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new()
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero, // to remove the clock-skew default time which is about 5 mins  
+        IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+    };
+});
+
+var encryptionSettings = new
+{
+    _key = builder.Configuration["EncryptionSettings:Key"]
+};
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseExceptionHandler();
+app.UseRouting();
+
+app.UseSession();
+
+app.MapGet("/", () => Results.Redirect("/scalar/v1"))
+   .ExcludeFromDescription();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(); 
+
+}
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.Run();
