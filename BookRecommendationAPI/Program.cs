@@ -42,15 +42,18 @@ builder.Services.AddHttpClient<GoogleBooksService>(client =>
     client.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
+
 builder.Services.AddOpenApi();
+
 var app = builder.Build();
 
-// app.UseExceptionHandler();
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RequestLogMiddleware>();
 
 app.MapGet("/", () => Results.Redirect("/scalar/v1"))
    .ExcludeFromDescription();
