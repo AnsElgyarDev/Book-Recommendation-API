@@ -56,7 +56,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-// app.UseMiddleware<RequestLogMiddleware>();
+app.UseMiddleware<RequestLogMiddleware>();
 
 app.MapGet("/", () => Results.Redirect("/scalar/v1"))
    .ExcludeFromDescription();
