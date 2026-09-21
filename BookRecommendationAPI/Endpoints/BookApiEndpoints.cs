@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using BookRecommendationAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using BookRecommendationAPI.Services;
 
 namespace BookRecommendationAPI.Endpoints;
@@ -19,7 +20,12 @@ public static class BookApiEndpoints
 
             var books = await booksService.SearchBooksAsync(query);
 
-            if (books is null || books.BookItems is null)
+            if (books is null)
+            {
+                return TypedResults.NotFound("No books found");
+            }
+
+            if (books.BookItems is null)
             {
                 return TypedResults.NotFound("No books found");
             }

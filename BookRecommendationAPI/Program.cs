@@ -35,7 +35,7 @@ builder.Services.AddHttpClient<GoogleBooksService>(client =>
     client.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
-
+builder.Services.AddOpenApi();
 var app = builder.Build();
 
 // app.UseExceptionHandler();
