@@ -8,9 +8,7 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
         
-    public DbSet<VolumeInfo>  VolumeInfos { get; set; }
-    public DbSet<BookItem> BookItems { get; set; }
-    public DbSet<BookApiResponse> BookApiResponses { get; set; }
+    public DbSet<SavedBook> SavedBooks { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

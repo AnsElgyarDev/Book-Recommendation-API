@@ -4,6 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using BookRecommendationAPI.Services;
 using BookRecommendationAPI.Endpoints;
+using BookRecommendationAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using BookRecommendationAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                         Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthorization();
 var encryptionSettings = new
