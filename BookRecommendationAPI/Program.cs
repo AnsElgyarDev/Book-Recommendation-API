@@ -8,6 +8,7 @@ using BookRecommendationAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BookRecommendationAPI.Models;
+using BookRecommendationAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddAuthorization();
 var encryptionSettings = new
 {
@@ -53,7 +56,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RequestLogMiddleware>();
+// app.UseMiddleware<RequestLogMiddleware>();
 
 app.MapGet("/", () => Results.Redirect("/scalar/v1"))
    .ExcludeFromDescription();

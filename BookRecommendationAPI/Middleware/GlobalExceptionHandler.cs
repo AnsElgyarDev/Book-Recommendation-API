@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Programming_Contest_Platform.Middlewares;
+namespace BookRecommendationAPI.Middlewares;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
