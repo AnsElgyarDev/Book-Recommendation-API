@@ -1,4 +1,4 @@
-namespace Programming_Contest_Platform.Middleware;
+namespace BookRecommendationAPI.Middlewares;
 
 public class RequestLogMiddleware
 {
