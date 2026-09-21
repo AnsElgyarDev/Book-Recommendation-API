@@ -52,7 +52,6 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -68,4 +67,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseBookApiEndpoints();
+
 app.Run();
