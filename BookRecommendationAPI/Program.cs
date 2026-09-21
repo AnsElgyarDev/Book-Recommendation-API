@@ -2,6 +2,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using BookRecommendationAPI.Services;
+using BookRecommendationAPI.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 

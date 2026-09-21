@@ -1,3 +1,5 @@
+using BookRecommendationAPI.Models; 
+
 namespace BookRecommendationAPI.Services;
 
 public class GoogleBooksService
@@ -14,13 +16,13 @@ public class GoogleBooksService
         try
         {
             var result = await _httpClient.GetFromJsonAsync<BookApiResponse>($"volumes?q={Uri.EscapeDataString(query)}");
-            return result;
+            return result ?? null!;
         }
 
-        catch(exception ex)
+        catch(Exception ex)
         {
             Console.WriteLine($"Error fetching books: {ex.Message}");
-            return null;            
+            return null!;            
         }
     }
 

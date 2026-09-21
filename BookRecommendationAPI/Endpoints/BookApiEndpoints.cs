@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using BookRecommendationAPI.Models;
+using BookRecommendationAPI.Services;
+
 namespace BookRecommendationAPI.Endpoints;
 
 public static class BookApiEndpoints
 {
     public static void UseBookApiEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/books/search", async Task<Results<BadRequest<string>, NotFound<string>, Ok<BookApiResponse>>>
+        app.MapGet("/api/books/search", async Task<Results<BadRequest<string>, NotFound<string>, Ok<List<BookItem>>>>
                 (string query, GoogleBooksService booksService) =>
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -13,13 +18,13 @@ public static class BookApiEndpoints
             }
 
             var books = await booksService.SearchBooksAsync(query);
-            
-            if (books?.Items == null)
+
+            if (books is null || books.BookItems is null)
             {
-                return Results.NotFound("No books found");
+                return TypedResults.NotFound("No books found");
             }
 
-            return TypedResults.Ok(books.Items);
+            return TypedResults.Ok(books.BookItems);
         });
     }
 }
