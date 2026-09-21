@@ -39,7 +39,7 @@ public class GoogleBooksService
                             VolumeInfo = new VolumeInfo
                             {
                                 Title = book.Title,
-                                Authors = new {book.Author},
+                                Authors = new List<string> {book.Author},
                                 Description = book.Description   
                             }
                         }
@@ -56,7 +56,24 @@ public class GoogleBooksService
             }
 
             var result = await _httpClient.GetFromJsonAsync<BookApiResponse>(url);
-            return result ?? null!;
+
+            var firstItem = result?.BookItems?.FirstOrDefault();
+
+            if (firstItem != null)
+            {
+                var savedBook = new SavedBook
+                {
+                    Id = firstItem.Id ?? string.Empty,
+                    Title = firstItem.VolumeInfo?.Title ?? string.Empty,
+                    Author = firstItem.VolumeInfo?.Authors != null ? string.Join(", ", firstItem.VolumeInfo.Authors) : string.Empty,
+                    Description = firstItem.VolumeInfo?.Description ?? string.Empty,
+                    SavedAt = DateTime.UtcNow
+                };
+
+                await _context.SavedBooks.AddAsync(savedBook);
+                await _context.SaveChangesAsync();
+            }
+        return result ?? null!;
         }
         
         catch(Exception ex)
