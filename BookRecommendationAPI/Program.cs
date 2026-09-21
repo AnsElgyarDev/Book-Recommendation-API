@@ -28,6 +28,12 @@ var encryptionSettings = new
     _key = builder.Configuration["EncryptionSettings:Key"]
 };
 
+builder.Services.AddHttpClient<GoogleBooksService>(client => 
+{
+    client.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
 var app = builder.Build();
 
 // app.UseExceptionHandler();
@@ -46,4 +52,5 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseBookApiEndpoints();
 app.Run();
