@@ -2,6 +2,7 @@ namespace BookRecommendationAPI.Dtos;
 
 public class BookDto
 {
+    public string Id { get; set; }
     public string Title { get; set; } = string.Empty;  
     public List<string> Authors { get; set; } = new List<string>();  
     public string Description { get; set; } = string.Empty;  
