@@ -36,5 +36,7 @@ public static class BookApiEndpoints
 
             return TypedResults.Ok(bookDtos);
         });
+
+        
     }
 }

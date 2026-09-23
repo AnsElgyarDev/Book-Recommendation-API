@@ -9,27 +9,34 @@ namespace BookRecommendationAPI.Endpoints;
 
 public static class SavedBooksEndpoints
 {
-    // Crud operations for the Saved Books
     public static void UseSavedBooksEndpoints(this WebApplication app)
     {
-        private readonly SavedBooksServices _savedBookServices;
-
-        public SavedBooksEnpoints(SavedBooksServices _savedBookServices)
+        // CRUD operations for the Saved Books
+     
+        var savedBooksGroup = app.MapGroup("/api/saved-books");
+        
+        savedBooksGroup.MapGet("/", async (ISavedBooksServices service) =>
         {
-            this._savedBookServices = savedBookServices;
-        }
+            var books = await service.GetAll(string.Empty);
+            return Results.Ok(books);
+        });
 
-        app.MapGet("api/Books/{id:int}", async Task<Results<NotFound<string>, Ok<List<SavedBook>>>>
-                  (string id) =>
-        {   
-           var books = await _savedBookServices.GetAll(id);
+        savedBooksGroup.MapGet("/{id}", async (string id, ISavedBooksServices service) =>
+        {
+            var book = await service.GetById(id);
+            return book is not null ? Results.Ok(book) : Results.NotFound(new { message = "Book not found." });
+        });
 
-           if(books is null)
-           {
-                return TypedResults.NotFound("There is no Books with this user");
-           }
+        savedBooksGroup.MapPut("/{id}", async (string id, SavedBook updatedBook, ISavedBooksServices service) =>
+        {
+            var result = await service.Update(id, updatedBook);
+            return result is not null ? Results.Ok(new { message = "Updated successfully", result }) : Results.NotFound(new { message = "Book not found." });
+        });
 
-           return TypedResults.Ok(books);
+        savedBooksGroup.MapDelete("/{id}", async (string id, ISavedBooksServices service) =>
+        {
+            var deleted = await service.Delete(id);
+            return deleted ? Results.Ok(new { message = "Deleted successfully" }) : Results.NotFound(new { message = "Book not found." });
         });
     }
 }
