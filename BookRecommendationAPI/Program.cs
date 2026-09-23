@@ -50,15 +50,16 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.UseMiddleware<RequestLogMiddleware>();
+
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RequestLogMiddleware>();
 
 app.MapGet("/", () => Results.Redirect("/scalar/v1"))
-   .ExcludeFromDescription();
+   .ExcludeFromDescription();   
 
 if (app.Environment.IsDevelopment())
 {
@@ -67,5 +68,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseBookApiEndpoints();
+app.UseSavedBooksEndpoints();
 
 app.Run();

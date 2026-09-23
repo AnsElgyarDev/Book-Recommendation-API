@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using BookRecommendationAPI.Models;
+using BookRecommendationAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using BookRecommendationAPI.Services;
 using BookRecommendationAPI.Dtos;
@@ -37,6 +38,25 @@ public static class SavedBooksEndpoints
         {
             var deleted = await service.Delete(id);
             return deleted ? Results.Ok(new { message = "Deleted successfully" }) : Results.NotFound(new { message = "Book not found." });
+        });
+
+
+        // Saving the User Selection Book  
+        savedBooksGroup.MapPost("/", async (SavedBook newBook, ISavedBooksServices service, AppDbContext context) =>
+        {
+            var exists = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(
+                context.SavedBooks, b => b.Id == newBook.Id);
+            
+            if (exists)
+            {
+                return Results.BadRequest(new { message = "Book already saved!" });
+            }
+
+            newBook.SavedAt = DateTime.UtcNow;
+            await context.SavedBooks.AddAsync(newBook);
+            await context.SaveChangesAsync();
+
+            return Results.Created($"/api/saved-books/{newBook.Id}", newBook);
         });
     }
 }
