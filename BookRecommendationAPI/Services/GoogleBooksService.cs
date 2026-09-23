@@ -21,32 +21,29 @@ public class GoogleBooksService
     {
         try
         {
-            var exist = await _context.SavedBooks.AnyAsync<SavedBook>(book => book.Title == query);
-            
-            if(exist)
+            var existingBook = await _context.SavedBooks
+                .FirstOrDefaultAsync(b => b.Title.ToLower() == query.ToLower());
+
+            if (existingBook != null)
             {
                 Console.WriteLine("Came From Database!");
 
-                var book = await _context.SavedBooks.FirstOrDefaultAsync(book => book.Title == query);
-                
-                var BookApiResponse =  new BookApiResponse 
+                return new BookApiResponse
                 {
-                    BookItems = new List<BookItem>() 
+                    BookItems = new List<BookItem>
                     {
-                        new BookItem 
+                        new BookItem
                         {
-                            Id = book.Id,
+                            Id = existingBook.Id,
                             VolumeInfo = new VolumeInfo
                             {
-                                Title = book.Title,
-                                Authors = new List<string> {book.Author},
-                                Description = book.Description   
+                                Title = existingBook.Title,
+                                Authors = string.IsNullOrEmpty(existingBook.Author) ? new List<string>() : new List<string> { existingBook.Author },
+                                Description = existingBook.Description
                             }
                         }
                     }
                 };
-                
-                return BookApiResponse ?? null!;
             }
 
             var url = $"volumes?q={Uri.EscapeDataString(query)}";
@@ -56,31 +53,34 @@ public class GoogleBooksService
             }
 
             var result = await _httpClient.GetFromJsonAsync<BookApiResponse>(url);
-
             var firstItem = result?.BookItems?.FirstOrDefault();
 
             if (firstItem != null)
             {
-                var savedBook = new SavedBook
-                {
-                    Id = firstItem.Id ?? string.Empty,
-                    Title = firstItem.VolumeInfo?.Title ?? string.Empty,
-                    Author = firstItem.VolumeInfo?.Authors != null ? string.Join(", ", firstItem.VolumeInfo.Authors) : string.Empty,
-                    Description = firstItem.VolumeInfo?.Description ?? string.Empty,
-                    SavedAt = DateTime.UtcNow
-                };
+                var existsById = await _context.SavedBooks.AnyAsync(b => b.Id == firstItem.Id);
 
-                await _context.SavedBooks.AddAsync(savedBook);
-                await _context.SaveChangesAsync();
+                if (!existsById)
+                {
+                    var savedBook = new SavedBook
+                    {
+                        Id = firstItem.Id ?? string.Empty,
+                        Title = firstItem.VolumeInfo?.Title ?? string.Empty,
+                        Author = firstItem.VolumeInfo?.Authors != null ? string.Join(", ", firstItem.VolumeInfo.Authors) : string.Empty,
+                        Description = firstItem.VolumeInfo?.Description ?? string.Empty,
+                        SavedAt = DateTime.UtcNow
+                    };
+
+                    await _context.SavedBooks.AddAsync(savedBook);
+                    await _context.SaveChangesAsync();
+                }
             }
-        return result ?? null!;
+
+            return result ?? null!;
         }
-        
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine($"Error fetching books: {ex.Message}");
             return null!;            
         }
     }
-
 }
