@@ -1,0 +1,15 @@
+.book-grid__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-3);
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
