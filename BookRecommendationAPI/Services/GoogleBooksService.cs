@@ -22,7 +22,7 @@ public class GoogleBooksService
         try
         {
             var existingBook = await _context.SavedBooks
-                .FirstOrDefaultAsync(b => b.Title.ToLower() == query.ToLower());
+                                .FirstOrDefaultAsync(b => b.Title.ToLower().Contains(query.ToLower()) || query.ToLower().Contains(b.Title.ToLower()));
 
             if (existingBook != null)
             {
