@@ -1,7 +1,19 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
+// Proxies /api during `npm run dev` so the frontend can call relative paths
+// (e.g. httpClient baseURL "/api") without hitting CORS on the .NET API,
+// which is expected to run on https://localhost:7xxx per its launchSettings.
 export default defineConfig({
   plugins: [react()],
-})
+  server: {
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_PROXY_TARGET || "https://localhost:7241",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+});

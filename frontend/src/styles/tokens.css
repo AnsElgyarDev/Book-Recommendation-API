@@ -1,0 +1,38 @@
+:root {
+  /* Color */
+  --bg-primary: #0a0a0b;
+  --bg-elevated: #141416;
+  --bg-hover: #1c1c1f;
+  --border-subtle: #26262a;
+  --border-focus: #3d3d42;
+  --text-primary: #ededef;
+  --text-secondary: #8a8a8e;
+  --text-tertiary: #55555a;
+  --accent: #e8e8e8;
+  --accent-danger: #e5484d;
+  --accent-success: #4cc38a;
+
+  /* Type */
+  --font-ui: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  --text-label: 13px;
+  --text-body: 15px;
+  --text-title: 20px;
+  --text-header: 28px;
+
+  /* Spacing (8px base unit) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+
+  /* Shape/motion */
+  --radius: 4px;
+  --transition-fast: 150ms ease-out;
+
+  --page-max-width: 1120px;
+}
