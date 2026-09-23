@@ -1,0 +1,57 @@
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.skeleton-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-rows {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.skeleton-row {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 2px;
+  background: var(--bg-elevated);
+}
+
+.skeleton-line--title {
+  width: 60%;
+  height: 14px;
+}
+
+.skeleton-line--meta {
+  width: 40%;
+}
+
+.skeleton-line--body {
+  width: 100%;
+}
