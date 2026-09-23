@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookRecommendationAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260921211724_UpdateSavedBooks")]
-    partial class UpdateSavedBooks
+    [Migration("20260923151943_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
